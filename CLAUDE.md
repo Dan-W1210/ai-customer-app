@@ -46,12 +46,18 @@ lib/                   # AIクライアント・ユーティリティ
 - 依存は最小限に保ち、シンプルさと動作速度を優先する。
 - 環境変数やAPIキーをリポジトリにコミットしない（`.gitignore` で除外）。
 
-## 開発コマンド（プロジェクト初期化後に追記）
+## 開発コマンド
 
 ```bash
-npm run dev     # 開発サーバー起動
+npm install     # 依存インストール
+npm run dev     # 開発サーバー起動（http://localhost:3000）
 npm run build   # 本番ビルド
+npm run start   # 本番サーバー起動
 npm run lint    # Lint
 ```
 
-> 注: まだ Next.js プロジェクトの初期化（`package.json` など）は行われていません。要件定義の後にセットアップします。
+## 実装メモ
+
+- AIモデルは `lib/constants.ts` の `CLAUDE_MODEL`（`claude-opus-4-8`）で定義。
+- APIキーはユーザーが設定モーダルで入力し、localStorage（`lib/constants.ts` の `API_KEY_STORAGE_KEY`）に保存。
+- フロントは `/api/generate` へ `x-api-key` ヘッダーでキーを渡し、Route Handler が Anthropic SDK で通信する。サーバーの `.env` にキーは不要。
