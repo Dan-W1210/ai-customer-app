@@ -58,6 +58,8 @@ npm run lint    # Lint
 
 ## 実装メモ
 
-- AIモデルは `lib/constants.ts` の `CLAUDE_MODEL`（`claude-opus-4-8`）で定義。
+- AIモデルは `lib/constants.ts` の `CLAUDE_MODEL`（`claude-sonnet-4-6`）で定義。
 - APIキーはユーザーが設定モーダルで入力し、localStorage（`lib/constants.ts` の `API_KEY_STORAGE_KEY`）に保存。
 - フロントは `/api/generate` へ `x-api-key` ヘッダーでキーを渡し、Route Handler が Anthropic SDK で通信する。サーバーの `.env` にキーは不要。
+- 返信生成はストリーミング（`client.messages.stream`）で行い、Route Handler は `text/plain` のストリームを返す。フロントは `res.body` を逐次読み取って表示する。認証エラー等はストリーム開始前に検知して JSON＋ステータスで返す。
+- 想定外のレンダリングエラーは `app/error.tsx`（エラーバウンダリ）で捕捉する。

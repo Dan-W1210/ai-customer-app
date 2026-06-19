@@ -4,7 +4,7 @@
 export const API_KEY_STORAGE_KEY = "ai-customer-app:anthropic-api-key";
 
 // 利用する Claude モデル ID
-export const CLAUDE_MODEL = "claude-opus-4-8";
+export const CLAUDE_MODEL = "claude-sonnet-4-6";
 
 // 対応トーンの選択肢（セレクトボックス用）
 export interface ToneOption {

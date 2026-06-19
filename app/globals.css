@@ -11,3 +11,19 @@ body {
   background-color: #f8fafc;
   color: #0f172a;
 }
+
+/* トースト用のフェードイン＋スライドアップ */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: toast-in 0.2s ease-out;
+}
