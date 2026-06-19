@@ -58,17 +58,35 @@ export default function Home() {
         body: JSON.stringify({ inquiry, tone: toneInstruction }),
       });
 
-      const data = await res.json();
-
+      // 4. エラー時は JSON でメッセージが返るのでトースト表示
       if (!res.ok) {
-        showToast(data.error ?? "生成に失敗しました。", "error");
+        const data = await res.json().catch(() => null);
+        showToast(data?.error ?? "生成に失敗しました。", "error");
         return;
       }
 
-      setReply(data.reply ?? "");
+      // 5. 本文はストリーミングで届くため、逐次読み取って表示する
+      const reader = res.body?.getReader();
+      if (!reader) {
+        showToast("レスポンスの読み取りに失敗しました。", "error");
+        return;
+      }
+
+      const decoder = new TextDecoder();
+      let accumulated = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        accumulated += decoder.decode(value, { stream: true });
+        setReply(accumulated);
+      }
+      accumulated += decoder.decode();
+      setReply(accumulated);
+
       showToast("返信の下書きを生成しました。", "success");
     } catch {
-      showToast("通信エラーが発生しました。", "error");
+      // ストリーミング途中の中断・通信エラーなど
+      showToast("通信エラーが発生しました。生成が中断された可能性があります。", "error");
     } finally {
       setLoading(false);
     }
